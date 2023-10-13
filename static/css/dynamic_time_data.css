@@ -1,0 +1,49 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#chart-container {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+
+}
+
+
+
+.wrapper {
+    margin: 0 auto;
+  }
+  
+.wrapper--w680 {
+  margin-top: 1%;
+    height: 70%;
+    display: flex;
+    justify-content: center;
+}
+
+
+
+.card {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background: #ffffff;
+    width:  70%;
+    
+  }
+  
+  .card-4 {
+    background: #ffffff;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.15);
+    -moz-box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.15);
+  }
+  
+

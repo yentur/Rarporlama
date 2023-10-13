@@ -1,0 +1,485 @@
+<!-- Coding by CodingLab | www.codinglabweb.com -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!----======== CSS ======== -->
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="static/css/graph.css">
+
+
+    <!----===== Boxicons CSS ===== -->
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+
+    <script src="static/js/multiselect.js"></script>
+    <link rel="stylesheet" href="static/css/multiselect.css">
+    <title>Dashboard Sidebar Menu</title>
+</head>
+
+<body>
+    <nav class="sidebar close">
+        <header>
+            <div class="image-text">
+                <span class="image">
+                    <img src="static/icons/logo.png" alt="">
+                </span>
+
+                <div class="text logo-text">
+                    <span class="name">RAPORLAMA</span>
+                </div>
+            </div>
+
+            <i class='bx bx-chevron-right toggle'></i>
+        </header>
+
+        <div class="menu-bar">
+            <div class="menu">
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="main">
+                            <i class='bx bx-home-alt icon'></i>
+                            <span class="text nav-text">Anasayfa</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="live">
+                            <i class='bx bx-line-chart icon'></i>
+                            <span class="text nav-text">Anlık Kullanım</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="tablo">
+                            <i class='bx bx-table icon'></i>
+                            <span class="text nav-text">Tablo</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="graph">
+                            <i class='bx bx-pie-chart-alt icon'></i>
+                            <span class="text nav-text">Grafik</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="config">
+                            <i class='bx bxs-cog icon'></i>
+                            <span class="text nav-text">Ayarlar</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+
+            <div class="bottom-content">
+                <li class="mode">
+                    <div class="sun-moon">
+                        <i class='bx bx-moon icon moon'></i>
+                        <i class='bx bx-sun icon sun'></i>
+                    </div>
+                    <span class="mode-text text">Dark mode</span>
+
+                    <div class="toggle-switch">
+                        <span class="switch"></span>
+                    </div>
+                </li>
+            </div>
+        </div>
+
+    </nav>
+
+    <section class="home">
+        <div class="text">GRAFİK</div>
+
+        <div class="wrapper--w50 ">
+            <div class="card-4">
+                <div class="container mt-5">
+                    <form action="/graph" method="post">
+                        <div class="form-group row">
+                            <label for="start_date" class="label-date">Başlangıç Tarihi:</label>
+                            <div class="col-sm-10">
+                                <input type="datetime-local" class="form-control" id="start_date" name="start_date">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="end_date" class="label-date"">Bitiş Tarihi:</label>
+                    <div class=" col-sm-10">
+                                <input type="datetime-local" class="form-control" id="end_date" name="end_date">
+                        </div>
+                </div>
+                <div class="wrapper wrapper--w100">
+                    <div class="card card-4">
+
+                        <select name="Debi" id="Debi" multiple>
+
+                            <option value="debi_1">1.Debi Metre (SU KUYULARI)</option>
+                            <option value="debi_2">2.Debi Metre (SU KUYULARI)</option>
+                            <option value="debi_3">3.Debi Metre (BASKİ)</option>
+                            <option value="debi_4">4.Debi Metre (SU KUYULARI)</option>
+                            <option value="debi_5">5.Debi Metre (KÜKÜRT AMBARI)</option>
+                            <option value="debi_6">6.Debi Metre (AMONYAK)</option>
+                            <option value="debi_7">7.Debi Metre (AMONYAK)</option>
+                            <option value="debi_8">8.Debi Metre (DAP/NPK)</option>
+                            <option value="debi_9">9.Debi Metre (AS)</option>
+                            <option value="debi_10">10.Debi Metre (MEKANİK ATÖLYE)</option>
+                            <option value="debi_11">11.Debi Metre (TORBALAMA)</option>
+                            <option value="debi_12">12.Debi Metre (YEDEK MALZEME AMBARI)</option>
+                            <option value="debi_13">13.Debi Metre (İSKELE)</option>
+                            <option value="debi_14">14.Debi Metre (İTFAİYE DOLUM HATTI)</option>
+                            <option value="debi_15">15.Debi Metre (CAN TESİSİ)</option>
+                            <option value="debi_16">16.Debi Metre (KÜKÜRT AMBARI)</option>
+                            <option value="debi_17">17.Debi Metre (TÜRBİN)</option>
+                            <option value="debi_18">18.Debi Metre (FOSFORİK ASİT)</option>
+                            <option value="debi_19">19.Debi Metre (KUM FİLTRELERİ)</option>
+                            <option value="debi_20">20.Debi Metre (SEYRELTME SUYU)</option>
+                            <option value="debi_21">21.Debi Metre (SU TASFİYE DEGAZÖR SEYRELTİ SUYU 1)</option>
+                            <option value="debi_22">22.Debi Metre (SU TASFİYE DEGAZÖR SEYRELTİ SUYU 2)</option>
+                            <option value="debi_23">23.Debi Metre (TERS OSMOS SAF SU)</option>
+                            <option value="debi_24">24.Debi Metre (SÜLFİRİK ASİT ATIK ISI KAZANI)</option>
+                            <option value="debi_25">25.Debi Metre (SÜLFİRİK ASİT GEBLEZE YAĞ SOĞUTUCU)</option>
+                            <option value="debi_26">26.Debi Metre (SÜLFİRİK ASİT ABS TANKLARI)</option>
+                            <option value="debi_27">27.Debi Metre (DEMİNARİLİZE SU TANKLARI ÇIKIŞ)</option>
+                            <option value="debi_28">28.Debi Metre (YOĞUŞUM TANKI CANAN HATTI)</option>
+                            <option value="debi_29">29.Debi Metre (YOĞUŞUM TANKI DEGAZÖR HATTI)</option>
+                            <option value="debi_30">30.Debi Metre (ESKİ SU TASFİYE SAF SU HATTI)</option>
+                            <option value="debi_31">31.Debi Metre (ESKİ SU TASFİYE ATIK SU HATTI)</option>
+                            <option value="debi_32">32.Debi Metre (SU TASVİYE TOPLAMA HAVUZU)</option>
+                            <option value="debi_33">33.Debi Metre (5000m3 DEPO)</option>
+                        </select>
+
+
+
+                    </div>
+                </div>
+
+
+                <div class="wrapper wrapper--w80">
+                <div class="radion-wapper">
+                    <input type="radio" name="select" id="option-1" value="toplam" checked>
+                    <input type="radio" name="select" id="option-2" value="ortalama" >
+                      <label for="option-1" class="option option-1">
+                        <div class="dot"></div>
+                         <span> Toplam</span>
+                         </label>
+                      <label for="option-2" class="option option-2">
+                        <div class="dot"></div>
+                         <span> Ortalama</span>
+                      </label>
+                   </div>
+
+                </div>
+
+                <div class="wrapper--w50">
+                    <button class="button-getir" onclick="submit">Göster</button>
+
+                </div>
+
+                </form>
+            </div>
+        </div>
+        </div>
+
+
+
+        <div class="wrapper--w100">
+
+            <div class="box-chart-w300">
+                <div class="card-4--wh100 ">
+
+                    <div id="chart-container-pie-1"></div>
+
+
+
+                </div>
+
+            </div>
+
+            <div class="box-chart-w300">
+                <div class="card-4--wh100 ">
+
+                    <div id="chart-container-bar-1"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="box-chart-wfull">
+                <div class="card-4--wh100 ">
+                    <div id="chart-container-plot-1"></div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+    </section>
+
+    <script src="static/js/script.js"></script>
+
+
+    <script>
+
+        new MultiSelectTag('Debi', {
+            rounded: true,
+            shadow: true,
+            placeholder: 'Search',
+            onChange: function (values) {
+                console.log(values)
+            }
+        })
+
+    </script>
+
+    <script src="https://fastly.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+
+
+
+
+
+
+
+
+<script>
+
+
+
+
+
+
+var dom = document.getElementById('chart-container-pie-1');
+    var myChart = echarts.init(dom, null, {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    var app = {};
+    
+    var option;
+
+
+    var pie_data ={{pie_data|safe}};
+
+
+    option = {
+      legend: {
+        top: 'bottom'
+      },
+      label: {
+        show: true,
+        formatter(param) {
+
+          return param.name + ' (' + param.percent  + '%)';
+        }
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          mark: { show: true },
+          dataView: { show: true, readOnly: false },
+          restore: { show: true },
+          saveAsImage: { show: true }
+        }
+      },
+      series: [
+        {
+          name: 'Nightingale Chart',
+          type: 'pie',
+          radius: [20, 180],
+          center: ['50%', '50%'],
+          itemStyle: {
+            borderRadius: 8
+          },
+          data: pie_data
+       
+          
+        }
+      ]
+    };
+    
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+    
+    window.addEventListener('resize', myChart.resize);
+
+
+
+
+</script>
+
+
+
+
+
+<script>
+
+var dom = document.getElementById('chart-container-bar-1');
+var myBarChart = echarts.init(dom, null, {
+  renderer: 'canvas',
+  useDirtyRect: false
+});
+var app = {};
+
+var option;
+
+var bar_data ={{bar_data|safe}};
+
+option = {
+  toolbox: {
+    show: true,
+    feature: {
+      mark: { show: true },
+      dataView: { show: true, readOnly: false },
+      restore: { show: true },
+      saveAsImage: { show: true }
+    }
+  },
+  xAxis: {
+    type: 'category',
+    data: bar_data.x
+  },
+  yAxis: {
+    type: 'value'
+  },
+  series: [
+    {
+      data: bar_data.y,
+      type: 'bar'
+    }
+  ]
+};
+
+if (option && typeof option === 'object') {
+    myBarChart.setOption(option);
+}
+
+window.addEventListener('resize', myBarChart.resize);
+
+</script>
+
+
+
+    <script>
+        var dom = document.getElementById('chart-container-plot-1');
+        var myChart = echarts.init(dom, null, {
+            renderer: 'canvas',
+            useDirtyRect: false
+        });
+        var app = {};
+
+        var option;
+
+        var plot_data ={{plot_data|safe}};
+
+        console.log(plot_data)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        option = {
+            title: {
+                text: ''
+            },
+            legend: {
+                data: ['debi_1', 'debi_2', 'debi_3', 'debi_4', 'debi_5', 'debi_6',
+                    'debi_7', 'debi_8', 'debi_9', 'debi_10', 'debi_11', 'debi_12',
+                    'debi_13', 'debi_14', 'debi_15', 'debi_16', 'debi_17', 'debi_18',
+                    'debi_19', 'debi_20', 'debi_21', 'debi_22', 'debi_23', 'debi_24',
+                    'debi_25', 'debi_26', 'debi_27', 'debi_28', 'debi_29', 'debi_30',
+                    'debi_31', 'debi_32', 'debi_33'],
+                left: 10
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter: function (params) {
+                    params = params[0];
+                    var date = new Date(params.name);
+                    return (
+                        date.getDate() +
+                        '/' +
+                        (date.getMonth() + 1) +
+                        '/' +
+                        date.getFullYear() +
+                        ' : ' +
+                        params.value[1]
+                    );
+                },
+                axisPointer: {
+                    animation: false
+                }
+            },
+            dataZoom: [
+                {
+                    type: 'inside',
+                    start: 90,
+                    end: 100
+                },
+                {
+                    start: 0,
+                    end: 10
+                }
+            ],
+            xAxis: {
+                type: 'time',
+                splitLine: {
+                    show: false
+                },
+                name: "Tarih",
+                nameTextStyle: {
+                    fontWeight: "bolder",
+                    fontSize: 18,
+                    verticalAlign: "top"
+                }
+            },
+            yAxis: {
+                type: 'value',
+                boundaryGap: [0, '100%'],
+                splitLine: {
+                    show: false
+                },
+                name: "Debi Hızı",
+                nameTextStyle: {
+                    fontWeight: "bolder",
+                    fontSize: 18,
+                    verticalAlign: "middle",
+                    align: "right",
+                }
+            },
+            series: plot_data
+};
+
+
+
+
+        
+
+        if (option && typeof option === 'object') {
+            myChart.setOption(option);
+        }
+
+        window.addEventListener('resize', myChart.resize);
+    </script>
+
+</body>
+
+</html>

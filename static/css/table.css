@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat|Open+Sans|Roboto');
+
+* {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+}
+
+.filter {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+    background: rgb(255, 255, 255);
+    background: -moz-linear-gradient(90deg, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 100%);
+    background: -webkit-linear-gradient(90deg, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 100%);
+    background: linear-gradient(90deg, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#e94ca1", endColorstr="#c74ae9", GradientType=1);
+    opacity: .7;
+}
+
+table {
+    margin-top: 1%;
+    margin-left: 1%;
+    margin-right: 1%;
+    position: absolute;
+    z-index: 1;
+    border-collapse: collapse;
+    border-spacing: 0;
+    box-shadow: 0 2px 15px rgba(64, 64, 64, .7);
+    border-radius: 12px 12px 0 0;
+    width: 98%;
+    overflow: auto;
+}
+
+td,
+th {
+    
+    padding: 15px 20px;
+    text-align: center;
+
+
+}
+
+th {
+
+    background-color: #4db8ff;
+    color: #fafafa;
+    font-family: 'Open Sans', Sans-serif;
+    font-weight: 200;
+    text-transform: uppercase;
+
+}
+
+tr {
+
+    width: 100%;
+    background-color: #fafafa;
+    font-family: 'Montserrat', sans-serif;
+}
+
+tr:nth-child(even) {
+    background-color: #eeeeee;
+}
+
+
+.table-container{
+    display: flex;
+    justify-content:space-between;
+    
+}

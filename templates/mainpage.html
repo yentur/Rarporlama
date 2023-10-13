@@ -1,0 +1,324 @@
+<!-- Coding by CodingLab | www.codinglabweb.com -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!----======== CSS ======== -->
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="static/css/mainpage.css">
+    <!----===== Boxicons CSS ===== -->
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+
+
+    <title>Dashboard Sidebar Menu</title>
+</head>
+
+<body>
+    <nav class="sidebar close">
+        <header>
+            <div class="image-text">
+                <span class="image">
+                    <img src="static/icons/logo.png" alt="">
+                </span>
+
+                <div class="text logo-text">
+                    <span class="name">RAPORLAMA</span>
+                </div>
+            </div>
+
+            <i class='bx bx-chevron-right toggle'></i>
+        </header>
+
+        <div class="menu-bar">
+            <div class="menu">
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="main">
+                            <i class='bx bx-home-alt icon'></i>
+                            <span class="text nav-text">Anasayfa</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="live">
+                            <i class='bx bx-line-chart icon'></i>
+                            <span class="text nav-text">Anlık Kullanım</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="tablo">
+                            <i class='bx bx-table icon'></i>
+                            <span class="text nav-text">Tablo</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="graph">
+                            <i class='bx bx-pie-chart-alt icon'></i>
+                            <span class="text nav-text">Grafik</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-link">
+                        <a href="config">
+                            <i class='bx bxs-cog icon'></i>
+                            <span class="text nav-text">Ayarlar</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+
+            <div class="bottom-content">
+                <li class="mode">
+                    <div class="sun-moon">
+                        <i class='bx bx-moon icon moon'></i>
+                        <i class='bx bx-sun icon sun'></i>
+                    </div>
+                    <span class="mode-text text">Dark mode</span>
+
+                    <div class="toggle-switch">
+                        <span class="switch"></span>
+                    </div>
+                </li>
+            </div>
+        </div>
+
+    </nav>
+
+    <section class="home">
+        <div class="text">ANASAYFA</div>
+
+
+
+        <div class="main-page">
+            <div class="box-chart-w300">
+                <div class="card-4--wh100 ">
+
+                    <div id="chart-container-pie-1">
+
+
+
+
+                    </div>
+
+
+                </div>
+            </div>
+
+   
+
+                <div id="data-table">    
+                    {{tablo_data|safe}}
+
+            </div>
+
+
+            <div class="box-chart-wfull">
+                <div class="card-4--wh100 ">
+
+                    <div id="chart-container-bar-1"></div>
+                    
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+    </section>
+
+
+
+    <script src="static/js/script.js"></script>
+
+
+
+
+
+
+    <script src="https://fastly.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+
+
+
+
+
+
+    <script>
+
+
+
+        var dom = document.getElementById('chart-container-pie-1');
+        var myPieChart = echarts.init(dom, null, {
+            renderer: 'canvas',
+            useDirtyRect: false
+        });
+        var app = {};
+
+        var option;
+
+
+
+
+
+        option = {
+            legend: {
+                top: 'bottom'
+            },
+            label: {
+                show: true,
+                formatter(param) {
+
+                    return param.name + ' (' + param.percent + '%)';
+                }
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: true },
+                    dataView: { show: true, readOnly: false },
+                    restore: { show: true },
+                    saveAsImage: { show: true }
+                }
+            },
+            series: [
+                {
+                    name: 'Nightingale Chart',
+                    type: 'pie',
+                    radius: [20, 180],
+                    center: ['50%', '50%'],
+                    itemStyle: {
+                        borderRadius: 8
+                    },
+                    data: []
+
+
+                }
+            ]
+        };
+
+
+
+        function fetchData() {
+
+            fetch('/update_data_main_pie')
+                .then(response => response.json())
+                .then(data => {
+                    myPieChart.setOption({
+                        series: [
+                            {
+                                data: data
+                            }
+                        ]
+
+                    });
+                });
+
+        }
+        setInterval(fetchData, 5000);
+
+        if (myPieChart && typeof option === 'object') {
+            myPieChart.setOption(option);
+        }
+
+        window.addEventListener('resize', myPieChart.resize);
+
+    </script>
+
+
+    <script>
+
+        var dom = document.getElementById('chart-container-bar-1');
+        var myBarChart = echarts.init(dom, null, {
+            renderer: 'canvas',
+            useDirtyRect: false
+        });
+        var app = {};
+
+        var option;
+
+        option = {
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: { show: true },
+                    dataView: { show: true, readOnly: false },
+                    restore: { show: true },
+                    saveAsImage: { show: true }
+                }
+            },
+            xAxis: {
+                type: 'category',
+                data: []
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    data: [],
+                    type: 'bar'
+                }
+            ]
+        };
+
+
+
+
+        function fetchData2() {
+
+            fetch('/update_data_main_bar')
+                .then(response => response.json())
+                .then(data => {
+                    myBarChart.setOption({
+                        xAxis: {
+                            data: data.x
+                        },
+                        series: [
+                            {
+                                data: data.y
+                            }
+                        ]
+
+                    });
+                });
+
+        }
+        setInterval(fetchData2, 5000);
+
+
+
+
+
+
+        if (option && typeof option === 'object') {
+            myBarChart.setOption(option);
+        }
+
+        window.addEventListener('resize', myBarChart.resize);
+    </script>
+
+
+
+<script>
+    function updateTable() {
+        fetch('/get_info_data')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('data-table').innerHTML = data.data;
+            });
+    }
+    setInterval(updateTable, 5000);
+</script>
+
+
+
+
+
+</body>
+
+</html>
