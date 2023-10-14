@@ -11,7 +11,7 @@ import schedule
 import threading
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-
+import webview
 
 conn=""
 table_name=""
@@ -25,7 +25,7 @@ main_tablo_index=0
 cols=[]
 
 
-app = Flask(__name__)
+app = Flask(__name__,static_folder="./static",template_folder="./templates")
 
 
 
@@ -153,8 +153,10 @@ def index():
     end_date=(datetime.now()+timedelta(days=1)).strftime("%Y-%m-%d")
     sql_query = f"SELECT * FROM veriler WHERE tarih BETWEEN #{start_date}# AND #{end_date}#"
     df=get_data(sql_query=sql_query)
-    tablo_data=calculate_summary_stats(df,0).to_html()
-
+    if df.shape[1]>1:
+        tablo_data=calculate_summary_stats(df,0).to_html()
+    else:
+        tablo_data=""
     return render_template('mainpage.html',tablo_data=tablo_data)
 
 
@@ -223,9 +225,10 @@ def get_data(sql_query):
     rows = cursor.fetchall()
     columns = [column.column_name for column in cursor.columns(table=table_name)]
     df=pd.DataFrame.from_records(rows)
-    df.columns=columns
-    df['tarih']=pd.to_datetime(df['tarih'])
-    df=df.sort_values(by="tarih",ascending=False).reset_index(drop=True)
+    if df.shape[1]>1:
+        df.columns=columns
+        df['tarih']=pd.to_datetime(df['tarih'])
+        df=df.sort_values(by="tarih",ascending=False).reset_index(drop=True)
     return df
 
 
@@ -410,10 +413,13 @@ def get_info_data():
 
 
 
+webview.create_window("Raporlama",app)
+
 if __name__ == '__main__':
     conn_database()
     # schedule_thread = threading.Thread(target=run_scheduled)
     # schedule_thread.start()
-    app.run(debug=True)
+    # app.run(debug=True)
+    webview.start()
 
 
