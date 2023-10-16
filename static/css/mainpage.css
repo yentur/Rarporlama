@@ -124,7 +124,7 @@ table {
 
 table thead tr {
     
-    background-color: #009879;
+    background-color: #00aeff;
     color: #ffffff;
     text-align: left;
     
@@ -144,13 +144,16 @@ table tbody tr:nth-of-type(even) {
 }
 
 table tbody tr:last-of-type {
-    border-bottom: 2px solid #009879;
+    border-bottom: 2px solid #00aeff;
 }
 
 table tbody tr.active-row {
     font-weight: bold;
-    color: #009879;
+    color: #00aeff;
 }
+
+
+
 
 
 

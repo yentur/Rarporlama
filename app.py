@@ -11,7 +11,14 @@ import schedule
 import threading
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
 import webview
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+import os
+
 
 conn=""
 table_name=""
@@ -29,31 +36,14 @@ app = Flask(__name__,static_folder="./static",template_folder="./templates")
 
 
 
-
-
 def conn_database(data=None):
     global conn,table_name
     try:
         conn.close()
     except:
         pass
-    if data==None:
-        config={}
-        with open('config/database_config.json') as f:
-                config = json.load(f)
-        db_file_path=config['db_file_path']
-        conn_str = r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=' + db_file_path
-        conn = pyodbc.connect(conn_str)
-        table_name=config['table_name']
-        return None
-    else:
-        try:
-            db_file_path=data['db_file_path']
-            table_name=data['table_name']
-            conn_str = r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=' + db_file_path
-            conn = pyodbc.connect(conn_str)
-            return True
-        except:
+    try:
+        if data==None:
             config={}
             with open('config/database_config.json') as f:
                     config = json.load(f)
@@ -61,7 +51,27 @@ def conn_database(data=None):
             conn_str = r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=' + db_file_path
             conn = pyodbc.connect(conn_str)
             table_name=config['table_name']
-            return False
+            return True
+        else:
+            try:
+                db_file_path=data['db_file_path']
+                table_name=data['table_name']
+                conn_str = r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=' + db_file_path
+                conn = pyodbc.connect(conn_str)
+                return True
+            except:
+                config={}
+                with open('config/database_config.json') as f:
+                        config = json.load(f)
+                db_file_path=config['db_file_path']
+                conn_str = r'DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=' + db_file_path
+                conn = pyodbc.connect(conn_str)
+                table_name=config['table_name']
+                return False
+    except:
+        return False
+
+       
 
 
 
@@ -88,28 +98,87 @@ def write_json(data,path="config/config.json"):
 
 
 
-def send_email(sender_mail,password,receiver_email,body="None"):
+
+
+
+def create_pdf(df,date):
+    table_data = [df.columns.tolist()] + df.values.tolist()
+    if not os.path.exists("./Rapor"):
+        os.mkdir("Rapor")
+    pdf_filename = f'./Rapor/Rapor{str(date)}.pdf'
+    pdf = SimpleDocTemplate(pdf_filename, pagesize=letter)
+    table = Table(table_data)
+
+    style = TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                        ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+
+    table.setStyle(style)
+
+
+    elements = [table]
+    pdf.build(elements)
+    return pdf_filename
+
+
+
+
+
+
+
+
+
+
+
+
+def send_email(sender_mail,password,receiver_email):
     try:
-        
+    
         smtp_server = 'smtp.yandex.com'
         smtp_port = 587
 
         subject = 'Günlük Rapor'
-        body = 'Bu bir test e-postasıdır.'
 
         msg = MIMEMultipart()
         msg['From'] = sender_mail
         msg['To'] = receiver_email
         msg['Subject'] = subject
-        msg.attach(MIMEText(body, 'plain'))
 
+        msg.attach(MIMEBase('application', 'octet-stream'))
+
+        start_date=datetime.now().strftime("%Y-%m-%d")
+        end_date=(datetime.now()+timedelta(days=1)).strftime("%Y-%m-%d")
+        sql_query = f"SELECT * FROM veriler WHERE tarih BETWEEN #{start_date}# AND #{end_date}#"
+        df=get_data(sql_query=sql_query)
+        df=calculate_summary_stats(df)
+        pdf_filename=create_pdf(df,start_date)
+        with open(pdf_filename, 'rb') as pdf_file:
+            part = MIMEBase('application', 'octet-stream')
+            part.set_payload((pdf_file).read())
+            encoders.encode_base64(part)
+            part.add_header('Content-Disposition', f"attachment; filename= {pdf_filename}")
+            msg.attach(part)
+
+        body = f""" 
+Sayın , 
+
+   {str(start_date)} - {str(end_date)} Günlük raporu içeren PDF dosyasını ekte bulabilirsiniz. 
+
+ 
+"""
+
+        msg.attach(MIMEText(body, 'plain'))
 
         server = smtplib.SMTP(smtp_server, smtp_port)
         server.starttls()
         server.login(sender_mail, password)
-
         server.sendmail(sender_mail, receiver_email, msg.as_string())
         server.quit()
+
         print('E-posta gönderme Basarili')
 
 
@@ -121,25 +190,45 @@ def send_email(sender_mail,password,receiver_email,body="None"):
 
 
 
-def calculate_summary_stats(dataframe,index):
+def calculate_summary_stats(dataframe,index=None):
     df=dataframe.drop("tarih",axis=1)
-    cols=df.columns[index*12:index*12+12]
-    df=df[cols]
-    total = df.sum()
-    
-    mean = df.mean()
-    
-    max_value = df.max()
-    
-    min_value = df.min()
-    
+    if index==None:
+        cols=df.columns
+        df=df[cols]
+        total = df.sum()
+        
+        mean = df.mean()
+        
+        max_value = df.max()
+        
+        min_value = df.min()
+        
 
-    summary_df = pd.DataFrame({
-        'Toplam': total,
-        'Ortalama': mean,
-        'Maksimum': max_value,
-        'Minimum': min_value
-    })
+        summary_df = pd.DataFrame({
+            'Debi_No':cols,
+            'Toplam': total,
+            'Ortalama': mean,
+            'Maksimum': max_value,
+            'Minimum': min_value
+        })
+    else:
+        cols=df.columns[index*12:index*12+12]
+        df=df[cols]
+        total = df.sum()
+        
+        mean = df.mean()
+        
+        max_value = df.max()
+        
+        min_value = df.min()
+        
+
+        summary_df = pd.DataFrame({
+            'Toplam': total,
+            'Ortalama': mean,
+            'Maksimum': max_value,
+            'Minimum': min_value
+        })
     
     summary_df = summary_df
     
@@ -149,6 +238,8 @@ def calculate_summary_stats(dataframe,index):
 @app.route('/')
 @app.route('/main')
 def index():
+    if type(conn)==str:
+        conn_database()
     start_date=datetime.now().strftime("%Y-%m-%d")
     end_date=(datetime.now()+timedelta(days=1)).strftime("%Y-%m-%d")
     sql_query = f"SELECT * FROM veriler WHERE tarih BETWEEN #{start_date}# AND #{end_date}#"
@@ -181,18 +272,22 @@ def live():
 
 
 
+
 def run_scheduled():
+    temp=True
     while True:
         try:
-            (sender_email,receiver_email,password,hour,minute)=read_json()
-            print((sender_email,receiver_email,password,hour,minute))
-            current_time = datetime.now()
-            if (int(current_time.hour)==int(hour)) and (int(current_time.minute) == int(minute)):
-                send_email(sender_email,password,receiver_email)
-            time.sleep(60)
+            if temp:
+                temp=False
+                (sender_email, receiver_email, password, hour, minute) = read_json()
+                current_time = datetime.now()
+                if (int(current_time.hour) == int(hour)) and (int(current_time.minute) == int(minute)):
+                    send_email(sender_email, password, receiver_email)
+                time.sleep(60)
+            temp=True
         except Exception as e:
             print(e)
-
+        
 
 
 
@@ -220,16 +315,20 @@ def live_data(columns,sql_query):
 
 
 def get_data(sql_query):
-    cursor = conn.cursor()
-    cursor.execute(sql_query)
-    rows = cursor.fetchall()
-    columns = [column.column_name for column in cursor.columns(table=table_name)]
-    df=pd.DataFrame.from_records(rows)
-    if df.shape[1]>1:
-        df.columns=columns
-        df['tarih']=pd.to_datetime(df['tarih'])
-        df=df.sort_values(by="tarih",ascending=False).reset_index(drop=True)
-    return df
+    try:
+        cursor = conn.cursor()
+        cursor.execute(sql_query)
+        rows = cursor.fetchall()
+        columns = [column.column_name for column in cursor.columns(table=table_name)]
+        df=pd.DataFrame.from_records(rows)
+        if df.shape[1]>1:
+            df.columns=columns
+            df['tarih']=pd.to_datetime(df['tarih'])
+            df=df.sort_values(by="tarih",ascending=False).reset_index(drop=True)
+            df=df.dropna(axis=0)
+        return df
+    except:
+        return pd.DataFrame()
 
 
 def array_to_dict(arr1,arr2):
@@ -414,12 +513,12 @@ def get_info_data():
 
 
 webview.create_window("Raporlama",app)
-
+schedule_thread = threading.Thread(target=run_scheduled)
+schedule_thread.daemon = True 
 if __name__ == '__main__':
     conn_database()
-    # schedule_thread = threading.Thread(target=run_scheduled)
-    # schedule_thread.start()
-    # app.run(debug=True)
-    webview.start()
+    schedule_thread.start()
+    app.run(debug=True)
+    
 
 
