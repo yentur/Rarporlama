@@ -276,11 +276,30 @@ body.dark .switch::before{
     background-color: var(--body-color);
     transition: var(--tran-05);
 }
-.home .text{
-    font-size: 30px;
-    font-weight: 500;
+.home .text-title{
+    text-align: center;
+    font-size: 56px;
+    font-weight: 800;
     color: var(--text-color);
     padding: 12px 60px;
+    color: #000000;
+    text-transform: uppercase;
+
+    display: grid;
+    grid-template-columns: 1fr max-content 1fr;
+    grid-template-rows: 27px 0;
+    grid-gap: 20px;
+    align-items: center;
+    
+}
+
+.home .text-title:after,.home .text-title:before {
+    content: " ";
+    display: block;
+    border-bottom: 1px solid #00aeff;
+    border-top: 1px solid #00aeff;
+    height: 5px;
+  background-color:#00aeff;
 }
 
 .sidebar.close ~ .home{
